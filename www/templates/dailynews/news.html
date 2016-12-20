@@ -1,0 +1,54 @@
+<ion-view title="">
+<link href="css/dailynews.css" rel="stylesheet" type="text/css" />
+<ion-nav-buttons side="right">
+	<button ng-click="share()" class="button-icon bar-button ion-android-share-alt"></button>
+	<button ui-sref="app.comment({id:posts})" class="button-icon bar-button icon-chat"></button>
+	<button ng-click="openPopover($event)" class="back-button-news bar-button icon-menu"></button>
+</ion-nav-buttons>
+<ion-content ng-show="data.time" class="news-content">
+	<!--ng-if="data.format == 'standard' && data.mobiconnector_feature_image.source_url"-->
+	<img  ng-src="{{data.thumbnail_images.medium_large.url}}" class="img">
+	<div class="row" style="margin-bottom:30px;">
+		<div class="col">
+			<div style="text-align:center;">
+			<b class="title-briefs line-height" ng-bind-html="data.title"></b>
+			<p class="info-news" style="margin-top:5px;">{{data.author.name}}, {{data.time |timeAgo}}</p>
+			</div>
+			<!--$sce.trustAsHtml(data.content)-->
+			<p class="briefs line-height-add hide-h2" ng-class="settings.text" ng-bind-html="$sce.trustAsHtml(data.content)"></p>
+		</div>
+	</div>
+	<center style="color:#191919;">
+		{{'thisArticle' | translate}} <span style="color:#30455c">{{data.comment_count}}</span> {{'comments' | translate}}
+	</center>
+	<div class="row no-padding" style="border-bottom:#cacaca solid 2px;margin-bottom:5px;">
+		<div class="col padding no-padding-top">
+			<button class="bar-button button-block login-email box-shadow" ui-sref="app.comment({id:posts})">
+				<span>{{'addComment' | translate}}</span>
+			</button>
+		</div>
+	</div>
+	<div ng-hide="incategory.length <1" class="row no-padding">
+		<div class="col padding" style="padding-bottom:0px">
+			<b style="color:#30455c;font-size:12px">{{'nextStory' | translate}}</b>
+		</div>
+	</div>
+	<div class="row no-padding" style="flex-wrap:wrap;">
+		<div class="col col-50 padding" ng-repeat="item in incategory">
+			<div ng-if="item.format != 'image'" ui-sref="app.news({id:item.id})">
+				<div class="next-story">
+					<img ng-src="{{item.mobiconnector_feature_image.mobiconnector_medium || 'img/no_images.png'}}" />
+				</div>
+				<a class="title-news"><b ng-bind-html="item.title.rendered"></b></a>
+			</div>
+			<div ng-if="item.format == 'image'" ui-sref="app.newsPhoto({id:item.id})">
+				<div class="next-story">
+					<img ng-src="{{item.mobiconnector_feature_image.mobiconnector_medium || 'img/no_images.png'}}" />
+				</div>
+				<a class="title-news"><b ng-bind-html="item.title.rendered"></b></a>
+			</div>
+		</div>
+	</div>
+	<ion-infinite-scroll ng-if="!over && loadDetail" on-infinite="load()" distance="1%"></ion-infinite-scroll>
+</ion-content>
+</ion-view>
